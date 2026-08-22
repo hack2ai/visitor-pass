@@ -1,6 +1,6 @@
 # AI Visitor Pass Management System
 
-> A production-oriented full-stack visitor management platform for digital registration, approval, verification, and administrative monitoring.
+> A production-oriented visitor management platform for digital registration, host approval, QR-based pass verification, and administrative monitoring.
 
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
@@ -11,65 +11,82 @@
 
 ## Overview
 
-The **AI Visitor Pass Management System** digitizes the visitor lifecycle for organizations that need a structured and auditable process for registration, host approval, pass verification, and administrative monitoring.
+The **AI Visitor Pass Management System** digitizes the visitor lifecycle for organizations that need a structured, auditable process for registration, approval, pass issuance, QR verification, and administrative monitoring.
 
-The application is built as a typed full-stack system with a React frontend, Node.js/Express REST API, Prisma ORM, and PostgreSQL persistence.
+The published application uses a typed full-stack architecture with a React frontend, Node.js/Express REST API, Prisma ORM, and PostgreSQL persistence.
 
 ## Core Workflow
 
 ```text
 Visitor Registration
         ↓
-Authentication / Validation
+Authentication & Validation
         ↓
-Host or Admin Review
+Host / Admin Review
         ↓
 Approve / Reject
         ↓
 Visitor Pass + QR Verification
         ↓
-Activity Tracking / Analytics
+Activity Tracking & Analytics
 ```
 
 ## Key Features
 
-- Secure user authentication
-- Protected routes
-- Role-based administrative access
-- Visitor registration and management
-- Approval / rejection workflow
+### Visitor Management
+
+- Visitor registration
+- Visitor profile management
+- Approval and rejection workflow
 - Visitor status tracking
+- Search and filtering
+- Administrative visitor records
+
+### Pass & Verification
+
+- Digital visitor pass generation
 - QR-based pass verification
-- Administrative dashboard
-- Visitor statistics and analytics
-- Recent visitor activity
-- Search, filtering and reports
-- Profile management
+- Verification workflow for authorized users
+- Pass lifecycle/status handling
+
+### Administration
+
+- Protected administrative routes
+- Role-based authorization
+- Dashboard metrics
+- Visitor statistics
+- Recent activity
+- Reports and operational views
 - Application settings
+
+### Engineering
+
 - REST API architecture
-- PostgreSQL persistence with Prisma
+- PostgreSQL persistence
+- Prisma ORM
+- TypeScript across the application layers
 - Responsive React interface
-- Type-safe TypeScript implementation
 
 ## Architecture
 
 ```text
-React + TypeScript Frontend
-            │
-            │ REST / JSON
-            ▼
-Node.js + Express API
-            │
-      ┌─────┴─────┐
-      │           │
- Authentication  Visitor Services
-      │           │
-      └─────┬─────┘
-            ▼
-        Prisma ORM
-            │
-            ▼
-       PostgreSQL
+                    React + TypeScript
+                           │
+                      REST / JSON
+                           │
+                           ▼
+                  Node.js + Express API
+                           │
+              ┌────────────┼────────────┐
+              ▼            ▼            ▼
+        Authentication   Visitors    Verification
+              │            │            │
+              └────────────┼────────────┘
+                           ▼
+                       Prisma ORM
+                           │
+                           ▼
+                      PostgreSQL
 ```
 
 ## Technology Stack
@@ -81,22 +98,14 @@ Node.js + Express API
 | Authentication | JWT-based authentication |
 | Database | PostgreSQL |
 | ORM | Prisma |
-| API | REST |
+| API | REST / JSON |
+| QR | QR-based pass verification |
 | Development | Git, GitHub, ESLint, Vite |
-
-## Security Considerations
-
-- Authentication is enforced for protected application areas.
-- Role-based access is used for administrative operations.
-- Secrets and database credentials should be provided through environment variables.
-- JWT configuration should use a strong, deployment-specific secret.
-- Production deployments should use HTTPS and secure cookie/header configuration where applicable.
-- Database credentials must never be committed to source control.
 
 ## Project Structure
 
 ```text
-.
+visitor-pass/
 ├── frontend/        # React application
 ├── backend/         # Node.js / Express API
 ├── prisma/          # Prisma schema and migrations
@@ -104,7 +113,7 @@ Node.js + Express API
 └── README.md
 ```
 
-> Directory names can vary slightly with the current implementation; the repository source is the source of truth.
+The repository source is the definitive reference for the current directory structure.
 
 ## Local Development
 
@@ -122,34 +131,75 @@ cd visitor-pass
 npm install
 ```
 
-Configure the backend environment according to the repository's environment example/configuration, including the PostgreSQL `DATABASE_URL` and JWT secret.
+Configure the backend environment using the repository's environment configuration. At minimum, provide the PostgreSQL `DATABASE_URL` and an application-specific JWT secret where required.
 
-Then generate Prisma Client and apply the database migrations used by the project:
+Generate Prisma Client and apply the development migrations:
 
 ```bash
 npx prisma generate
 npx prisma migrate dev
 ```
 
-Start the frontend and backend using the development scripts defined in `package.json`.
+Start the frontend and backend with the development scripts defined in `package.json`.
 
-## Production Checklist
+## Security
 
-Before deployment:
+Visitor-management software handles personal and operational data, so authorization boundaries are important.
 
-- Configure production environment variables.
-- Use a managed PostgreSQL database or hardened PostgreSQL deployment.
-- Enable HTTPS.
-- Rotate JWT and database credentials appropriately.
-- Restrict CORS to trusted origins.
-- Add rate limiting and structured logging at the API boundary.
-- Run database migrations deliberately during deployment.
-- Review authorization for every administrative endpoint.
-- Do not expose secrets in frontend bundles.
+Current design considerations include:
+
+- Authentication for protected application areas
+- Role-based administrative access
+- JWT-based authorization
+- Environment-based secrets
+- PostgreSQL persistence through Prisma
+
+For production deployment, additionally enforce:
+
+- HTTPS everywhere
+- Strict CORS allowlists
+- API rate limiting
+- Secure secret management and rotation
+- Centralized audit logging
+- Strong authorization checks on every sensitive endpoint
+- Input validation and consistent error handling
+- Database least-privilege access
+- Backup and recovery procedures
+- Dependency vulnerability scanning
+
+**Never commit database credentials, JWT secrets, API keys, or other sensitive configuration to GitHub.**
+
+## Production Deployment Checklist
+
+- [ ] Configure production environment variables
+- [ ] Use hardened/managed PostgreSQL
+- [ ] Enable HTTPS
+- [ ] Configure trusted CORS origins
+- [ ] Enable API rate limiting
+- [ ] Configure structured application logging
+- [ ] Review all admin authorization boundaries
+- [ ] Run Prisma migrations as part of a controlled deployment
+- [ ] Verify QR/pass validation rules
+- [ ] Configure monitoring and backups
+- [ ] Perform a security review before handling real organizational visitor data
+
+## Demo / Showcase
+
+For a recruiter-facing demonstration, the strongest screens to showcase are:
+
+1. Landing/login screen
+2. Visitor registration
+3. Admin dashboard
+4. Visitor approval workflow
+5. Generated visitor pass
+6. QR verification screen
+7. Visitor activity/analytics
 
 ## Project Value
 
-This project demonstrates practical full-stack engineering across **frontend development, REST API design, authentication, authorization, relational data modeling, ORM usage, QR verification, and administrative analytics**.
+This project demonstrates practical **full-stack engineering, REST API design, authentication, authorization, relational data modeling, Prisma ORM, QR-based verification, workflow design, and administrative analytics**.
+
+It is particularly relevant to real-world environments such as offices, campuses, events, residential communities, and controlled-access facilities.
 
 ## Author
 
